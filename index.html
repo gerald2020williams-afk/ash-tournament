@@ -152,6 +152,15 @@ canvas{display:block;border:2px solid var(--steel);box-shadow:0 0 40px rgba(179,
 @media (prefers-reduced-motion:reduce){.banner span.go{animation-duration:.01s;opacity:1}}
 </style>
 
+<style>
+.inst-btn{font:700 15px var(--body);letter-spacing:.12em;padding:12px 22px;background:var(--meter);color:#04121f;border:2px solid #fff;cursor:pointer;box-shadow:0 0 18px rgba(79,179,255,.55)}
+.inst-btn:focus-visible{outline:3px solid var(--hp);outline-offset:2px}
+.inst{position:absolute;inset:0;z-index:9;display:flex;align-items:center;justify-content:center;background:rgba(8,5,5,.9);padding:16px}
+.inst-card{max-width:340px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.inst h2{font-family:var(--display);font-weight:400;font-size:34px;margin:0;color:var(--hp);text-shadow:3px 3px 0 var(--blood)}
+.inst ol{text-align:left;margin:0;padding-left:22px;font-size:16px;line-height:1.6}
+.inst b{color:var(--hp)}
+</style>
 </head>
 <body>
 <div class="cab">
@@ -165,6 +174,7 @@ canvas{display:block;border:2px solid var(--steel);box-shadow:0 0 40px rgba(179,
     <div class="banner"><span id="banner"></span></div>
     <div class="hits" id="hits" hidden><b id="hitsN">2</b> HITS</div>
     <div class="vs" id="vs" hidden><div class="vsL"><small>YOUR TEAM</small><b id="vsLead">ASHE</b><span id="vsRest">ROXY · KAISER</span></div><div class="vsX">VS</div><div class="vsR"><small id="vsTag">CHALLENGER</small><b id="vsName"></b><span id="vsStyle"></span></div></div>
+    <div class="inst" id="inst" hidden><div class="inst-card"><h2>INSTALL THE APP</h2><ol id="instSteps"></ol><button class="go-btn" id="instOk">GOT IT</button></div></div>
     <div class="pause" id="pause" hidden><h2>PAUSED</h2><button class="go-btn" id="resume">RESUME</button><button class="ghost" id="quit">QUIT TO MENU</button></div>
     <div class="hint" id="hint" hidden>FINAL BLOW: KICK · KICK · PUNCH</div>
     <div class="menu" id="menu">
@@ -176,6 +186,7 @@ canvas{display:block;border:2px solid var(--steel);box-shadow:0 0 40px rgba(179,
         <div class="pick" id="pickRow" role="group" aria-label="Lead fighter"></div></div>
       <div class="diff" id="diffRow" role="group" aria-label="Difficulty"><button data-d="easy">EASY</button><button data-d="normal">NORMAL</button><button data-d="hard">HARD</button></div>
       <button class="go-btn" id="go">ENTER THE ARENA</button>
+      <button class="inst-btn" id="instB" hidden>⬇ INSTALL APP</button>
       <button class="ghost" id="cont" hidden>CONTINUE</button>
       <button class="ghost" id="back" hidden>BACK TO TITLE</button>
       <div class="extras" id="extras"><div class="pickL">QUICK FIGHT</div><div class="quick" id="quickRow"></div>
@@ -1520,6 +1531,21 @@ fit();requestAnimationFrame(loop);
 </script>
 
 <script>
+(()=>{const $=id=>document.getElementById(id);
+  const standalone=matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone;
+  if(standalone)return;
+  const ua=navigator.userAgent,ios=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1),safari=/Safari/.test(ua)&&!/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
+  let deferred=null;
+  addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;$('instB').hidden=false});
+  $('instB').hidden=false;
+  const steps=ios?(safari?['Tap the <b>Share</b> button (the square with an arrow, at the bottom or top of Safari).','Scroll down and tap <b>Add to Home Screen</b>.','Tap <b>Add</b>. The flaming-fist icon appears on your home screen.']
+      :['Copy this page\'s link.','Open it in <b>Safari</b> (iPhone apps can only be installed from Safari).','Tap <b>Share</b> → <b>Add to Home Screen</b> → <b>Add</b>.'])
+    :['Tap the <b>⋮</b> menu at the top right of Chrome.','Tap <b>Install app</b> (or <b>Add to Home screen</b>).','Tap <b>Install</b>. The flaming-fist icon appears on your home screen.'];
+  $('instSteps').innerHTML=steps.map(t=>'<li>'+t+'</li>').join('');
+  $('instB').onclick=async()=>{if(deferred){deferred.prompt();try{const r=await deferred.userChoice;if(r.outcome==='accepted')$('instB').hidden=true}catch(e){}deferred=null;return}$('inst').hidden=false;$('instOk').focus()};
+  $('instOk').onclick=()=>{$('inst').hidden=true};
+  addEventListener('appinstalled',()=>{$('instB').hidden=true});
+})();
 if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
 </script>
 </body>
