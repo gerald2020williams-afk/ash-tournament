@@ -93,6 +93,24 @@ body{background:var(--bg);color:var(--ink);font-family:var(--body);overflow:hidd
 .stats b{font-family:var(--display);font-size:20px;font-weight:400;color:var(--hp);font-variant-numeric:tabular-nums}
 .stats span{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);text-align:center}
 .diff{display:flex;gap:6px}
+.ladder{display:none!important}
+.menu{gap:12px}
+.menu h1{font-size:clamp(30px,min(12vw,11vh),80px)!important}
+.menu #mText{font-size:15px;max-width:40ch}
+.pick{display:flex!important;flex-wrap:nowrap;overflow-x:auto;max-width:100%;padding:4px 2px 8px;scroll-snap-type:x mandatory;justify-content:flex-start!important}
+.pick button{flex:0 0 auto;scroll-snap-align:start}
+.pickWrap{max-width:100%}
+.go-btn#go{font-size:28px;padding:12px 40px}
+.fold{width:100%;max-width:420px;border:1px solid var(--steel);background:rgba(0,0,0,.3)}
+.fold summary{cursor:pointer;padding:10px 12px;font-weight:700;font-size:13px;letter-spacing:.12em;color:var(--hp);list-style:none;text-align:center}
+.fold summary::-webkit-details-marker{display:none}
+.fold summary::after{content:' ▾'}.fold[open] summary::after{content:' ▴'}
+.fold summary:focus-visible{outline:2px solid var(--meter);outline-offset:2px}
+.fold[open]{padding-bottom:10px}
+.fold .pickL,.fold .quick,.fold .stats{margin:6px 10px 0}
+.howto-list{margin:0;padding:0 14px 0 30px;text-align:left;font-size:14px;line-height:1.5;display:flex;flex-direction:column;gap:6px}
+.howto-list b{color:var(--hp)}
+.fold .keys{margin:10px 12px 0;font-size:12px;color:var(--dim);text-align:center}
 .diff button{font:700 12px var(--body);letter-spacing:.1em;padding:8px 12px;background:#1d1412;color:var(--dim);border:1px solid var(--steel);cursor:pointer}
 .diff button[aria-pressed="true"]{color:var(--bg);background:var(--hp);border-color:var(--hp)}
 .ghost:focus-visible,.diff button:focus-visible,.tools button:focus-visible{outline:2px solid var(--meter);outline-offset:2px}
@@ -193,19 +211,32 @@ html.rot .grp{gap:5px}
     <div class="hint" id="hint" hidden>FINAL BLOW: KICK · KICK · PUNCH</div>
     <div class="menu" id="menu">
       <h1 id="mTitle">ASH TOURNAMENT</h1>
-      <button class="inst-btn" id="instB" hidden>⬇ INSTALL APP</button>
-      <p id="mText">Fight your way through three champions. Win two rounds to beat each one. Hold a direction and tap ▲ to flip. Land 2 or 3 kicks in a row for an automatic punch combo, or 3 punches in a row for a 7-kick combo. Hold Punch for rapid punches. Fill your blue meter to throw a fireball. Pick who fights first. If your fighter goes down, the next teammate jumps in. Below 25% health you go into Rage Mode and hit 30% harder. Block right as a hit lands to PARRY it. Fill your meter all the way and Fire unleashes a SUPER blast. Kaiser is a chameleon: he copies each opponent's style and can steal their finisher. Beat an opponent to unlock them as a playable fighter. Win the deciding round and enter the finisher code shown on screen.</p>
+      <p id="mText">Pick your fighter and tap PLAY!</p>
       <div class="ladder" id="ladder"></div>
-      <div class="keys">Keyboard: ← → move · ↑ jump · ↓ block · A punch · S kick · D fireball</div>
-      <div class="pickWrap" id="pickWrap"><div class="pickL">CHOOSE WHO FIGHTS FIRST</div>
+      <div class="pickWrap" id="pickWrap"><div class="pickL">CHOOSE YOUR FIGHTER</div>
         <div class="pick" id="pickRow" role="group" aria-label="Lead fighter"></div></div>
-      <div class="diff" id="diffRow" role="group" aria-label="Difficulty"><button data-d="easy">EASY</button><button data-d="normal">NORMAL</button><button data-d="hard">HARD</button></div>
-      <button class="go-btn" id="go">ENTER THE ARENA</button>
-      <p class="copy">© 2026 Ash Tournament · gerald2020williams-afk · All rights reserved</p>
+      <button class="go-btn" id="go">▶ PLAY</button>
       <button class="ghost" id="cont" hidden>CONTINUE</button>
       <button class="ghost" id="back" hidden>BACK TO TITLE</button>
-      <div class="extras" id="extras"><div class="pickL">QUICK FIGHT</div><div class="quick" id="quickRow"></div>
-        <div class="pickL">RECORDS</div><div class="stats" id="stats"></div></div>
+      <button class="inst-btn" id="instB" hidden>⬇ INSTALL APP</button>
+      <div class="diff" id="diffRow" role="group" aria-label="Difficulty"><button data-d="easy">EASY</button><button data-d="normal">NORMAL</button><button data-d="hard">HARD</button></div>
+      <details class="fold extras" id="extras"><summary>QUICK FIGHT &amp; RECORDS</summary><div class="pickL">QUICK FIGHT</div><div class="quick" id="quickRow"></div>
+        <div class="pickL">RECORDS</div><div class="stats" id="stats"></div></details>
+      <details class="fold" id="howto"><summary>HOW TO PLAY</summary>
+        <ul class="howto-list">
+          <li><b>◀ ▶</b> move and <b>▲</b> jump. Hold a direction and tap <b>▲</b> to flip.</li>
+          <li><b>PUNCH</b> and <b>KICK</b> to attack. Hold PUNCH for fast punches.</li>
+          <li>Land 2 or 3 kicks in a row, or 3 punches, for a big automatic combo.</li>
+          <li><b>BLOCK</b> stops hits. Block right as a hit lands to <b>PARRY</b>.</li>
+          <li>Fill the blue bar, then tap <b>FIRE</b> for a fireball. A full bar fires a <b>SUPER</b> blast.</li>
+          <li>Win 2 rounds to beat a fighter. Then tap the moves shown on screen for a finishing move.</li>
+          <li>If your fighter falls, the next teammate jumps in. Low health turns on <b>RAGE MODE</b>.</li>
+          <li>Kaiser copies each opponent's style and can steal their finisher.</li>
+          <li>Beat a fighter to unlock them as a player.</li>
+        </ul>
+        <div class="keys">Keyboard: ← → move · ↑ jump · ↓ block · A punch · S kick · D fireball</div>
+      </details>
+      <p class="copy">© 2026 Ash Tournament · gerald2020williams-afk · All rights reserved</p>
     </div>
   </div>
   <div class="pad">
@@ -1131,13 +1162,13 @@ function nextRound(){
   if(quick&&(wins[0]>=2||wins[1]>=2)){const won=wins[0]>=2;stat(won?'wins':'losses');if(fin)fin.keep=true;
     showMenu(won?'YOU WIN':'DEFEATED',`Quick fight against ${FOES[foeI].name}${won?' is yours.':' got away from you.'}`,'FIGHT AGAIN',()=>{quick=true;newMatch()});return}
   if(wins[0]>=2){stat('wins');
-    if(foeI+1>unlocked){unlocked=foeI+1;try{localStorage.setItem('ashT.unl',String(unlocked))}catch(e){}syncLeads();renderPick();syncPick();setTimeout(()=>{const m=$('mText');m.textContent+=` ${SHORTS[FOES[foeI].style]} is now playable. Pick them on the title screen.`},0)}
+    if(foeI+1>unlocked){unlocked=foeI+1;try{localStorage.setItem('ashT.unl',String(unlocked))}catch(e){}syncLeads();renderPick();syncPick();setTimeout(()=>{const m=$('mText');m.textContent+=` ${SHORTS[FOES[foeI].style]} is unlocked!`},0)}
     if(fin)fin.keep=true;
-    if(foeI===FOES.length-1){(()=>{try{localStorage.removeItem('ashT.best')}catch(e){}})(),showMenu('CHAMPION','You beat both bosses and every challenger. The ash throne is yours.','FIGHT AGAIN',()=>{foeI=0;newMatch()},true)}
-    else{const nx=FOES[foeI+1],cur=FOES[foeI];showMenu(cur.boss&&!cur.final?'EMPEROR FALLS':'VICTORY',cur.boss&&!cur.final?`You dethroned the Ashen Emperor. Four new challengers have entered, and they fight harder. First up: ${nx.name}, a ${nx.styleName} fighter, at the ${nx.stageName}.`:nx.boss?`${cur.name} is down. Now face the ${nx.final?'FINAL BOSS':'SUPER BOSS'}: ${nx.name}, master of ${nx.styleName}, at the ${nx.stageName}. He hits harder and takes less damage.`:`${cur.name} is down. Next up: ${nx.name}, a ${nx.styleName} fighter, at the ${nx.stageName}.`,'NEXT FIGHT',()=>{foeI++;newMatch()});try{localStorage.setItem('ashT.best',String(foeI+1))}catch(e){}draw()}
+    if(foeI===FOES.length-1){(()=>{try{localStorage.removeItem('ashT.best')}catch(e){}})(),showMenu('CHAMPION','You beat everyone! You are the champion!','FIGHT AGAIN',()=>{foeI=0;newMatch()},true)}
+    else{const nx=FOES[foeI+1],cur=FOES[foeI];showMenu(cur.boss&&!cur.final?'EMPEROR FALLS':'VICTORY',cur.boss&&!cur.final?`You beat the Emperor! 4 new fighters are coming.`:nx.boss?`${nx.final?'FINAL BOSS':'BOSS'} next: ${nx.name}!`:`Next up: ${nx.name}`,'NEXT FIGHT',()=>{foeI++;newMatch()});try{localStorage.setItem('ashT.best',String(foeI+1))}catch(e){}draw()}
   } else if(wins[1]>=2){stat('losses');
     if(fin)fin.keep=true;
-    showMenu('DEFEATED',FOES[foeI].name+' took the match. Get back in there.','REMATCH',newMatch);
+    showMenu('DEFEATED',FOES[foeI].name+' won this time. Try again!','REMATCH',newMatch);
   } else {round++;startRound()}
 }
 let STATS={wins:0,losses:0,fin:0,best:0,perfect:0,parry:0,super:0};try{Object.assign(STATS,JSON.parse(localStorage.getItem('ashT.stats')||'{}'))}catch(e){}
@@ -1152,7 +1183,7 @@ function showVS(){const f=FOES[foeI];phase='vs';$('vsName').textContent=f.name;$
 function setPause(on){if(!['fight','intro','tag'].includes(phase)&&on)return;paused=on;$('pause').hidden=!on;keys.left=keys.right=keys.block=false;autoP.on=false;if(on)$('resume').focus()}
 function showMenu(t,txt,btn,fn,title){
   if(title){renderPick();syncPick()}
-  $('cont').hidden=true;$('diffRow').hidden=!title;$('pickWrap').hidden=!title;$('extras').hidden=!title;$('back').hidden=!!title;
+  $('cont').hidden=true;$('diffRow').hidden=!title;$('pickWrap').hidden=!title;$('extras').hidden=!title;$('howto').hidden=!title;$('ladder').hidden=true;$('back').hidden=!!title;
   if(title){quick=false;renderStats();$('quickRow').innerHTML=unlocked?FOES.slice(0,unlocked).map((f,i)=>`<button data-q="${i}">${SHORTS[f.style]}</button>`).join(''):'<span>Beat an opponent to unlock quick fights.</span>'}
   if(title){let best=0;try{best=+localStorage.getItem('ashT.best')||0}catch(e){}if(best>0&&best<FOES.length){$('cont').hidden=false;$('cont').textContent='CONTINUE: FIGHT '+(best+1)+' · '+FOES[best].name;$('cont').onclick=()=>{sfx('ui');foeI=best;newMatch()}}}
   phase='menu';$('mTitle').textContent=t;$('mText').textContent=txt;$('go').textContent=btn;$('go').onclick=()=>{audioOn();sfx('ui');fn()};
@@ -1526,7 +1557,7 @@ let last=performance.now(),acc=0;
 function loop(t){acc+=Math.min(100,t-last);last=t;if(paused)acc=0;while(acc>=1000/60){step();acc-=1000/60}draw();requestAnimationFrame(loop)}
 $('pauseB').onclick=()=>{audioOn();sfx('ui');setPause(!paused)};
 $('resume').onclick=()=>{sfx('ui');setPause(false)};
-$('quit').onclick=()=>{setPause(false);fin=null;showMenu('ASH TOURNAMENT',INTRO,'ENTER THE ARENA',()=>{foeI=0;newMatch()},true)};
+$('quit').onclick=()=>{setPause(false);fin=null;showMenu('ASH TOURNAMENT',INTRO,'▶ PLAY',()=>{foeI=0;newMatch()},true)};
 const syncMute=()=>{$('muteB').setAttribute('aria-pressed',muted?'true':'false')};syncMute();
 if(document.fullscreenEnabled&&document.documentElement.requestFullscreen){$('fsB').hidden=false;
   $('fsB').onclick=()=>{audioOn();sfx('ui');const el=document.documentElement;
@@ -1542,7 +1573,7 @@ const syncPick=()=>[...$('pickRow').children].forEach(b=>b.setAttribute('aria-pr
 $('pickRow').onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;lead=+b.dataset.i;try{localStorage.setItem('ashT.lead',String(lead))}catch(_){}setTeam();syncPick();
   p1=fighter(TEAM[0],240,1);$('n1').textContent=TEAM[0].name;hud();audioOn();sfx('ui')};
 $('quickRow').onclick=e=>{const b=e.target.closest('button');if(!b)return;audioOn();sfx('ui');quick=true;foeI=+b.dataset.q;newMatch()};
-$('back').onclick=()=>{audioOn();sfx('ui');fin=null;quick=false;showMenu('ASH TOURNAMENT',INTRO,'ENTER THE ARENA',()=>{foeI=0;newMatch()},true)};
+$('back').onclick=()=>{audioOn();sfx('ui');fin=null;quick=false;showMenu('ASH TOURNAMENT',INTRO,'▶ PLAY',()=>{foeI=0;newMatch()},true)};
 const syncDiff=()=>[...$('diffRow').children].forEach(b=>b.setAttribute('aria-pressed',b.dataset.d===diff?'true':'false'));syncDiff();
 $('diffRow').onclick=e=>{const d=e.target.dataset&&e.target.dataset.d;if(!d)return;diff=d;try{localStorage.setItem('ashT.diff',d)}catch(_){}syncDiff();audioOn();sfx('ui')};
 addEventListener('pointerdown',audioOn,{capture:true});addEventListener('keydown',audioOn,{capture:true});
@@ -1550,7 +1581,7 @@ addEventListener('keydown',e=>{if(e.code==='KeyP'||e.code==='Escape'){if(phase!=
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&['fight','intro','tag'].includes(phase))setPause(true)});
 p1=fighter(TEAM[0],240,1);p2=fighter(FOES[0],560,-1);$('n1').textContent=TEAM[0].name;
 const INTRO=$('mText').textContent;
-showMenu('ASH TOURNAMENT',INTRO,'ENTER THE ARENA',()=>{foeI=0;newMatch()},true);
+showMenu('ASH TOURNAMENT',INTRO,'▶ PLAY',()=>{foeI=0;newMatch()},true);
 fit();requestAnimationFrame(loop);
 })();
 </script>
