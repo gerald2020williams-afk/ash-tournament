@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#0c0808">
 <meta name="description" content="Original 1-on-1 tag-team fighting game.">
 <meta name="mobile-web-app-capable" content="yes">
@@ -161,6 +163,7 @@ canvas{display:block;border:2px solid var(--steel);box-shadow:0 0 40px rgba(179,
 .inst h2{font-family:var(--display);font-weight:400;font-size:34px;margin:0;color:var(--hp);text-shadow:3px 3px 0 var(--blood)}
 .inst ol{text-align:left;margin:0;padding-left:22px;font-size:16px;line-height:1.6}
 .inst b{color:var(--hp)}
+.copy{margin:0;font-size:11px;letter-spacing:.06em;color:var(--dim)}
 </style>
 </head>
 <body>
@@ -188,6 +191,7 @@ canvas{display:block;border:2px solid var(--steel);box-shadow:0 0 40px rgba(179,
         <div class="pick" id="pickRow" role="group" aria-label="Lead fighter"></div></div>
       <div class="diff" id="diffRow" role="group" aria-label="Difficulty"><button data-d="easy">EASY</button><button data-d="normal">NORMAL</button><button data-d="hard">HARD</button></div>
       <button class="go-btn" id="go">ENTER THE ARENA</button>
+      <p class="copy">© 2026 Ash Tournament · gerald2020williams-afk · All rights reserved</p>
       <button class="ghost" id="cont" hidden>CONTINUE</button>
       <button class="ghost" id="back" hidden>BACK TO TITLE</button>
       <div class="extras" id="extras"><div class="pickL">QUICK FIGHT</div><div class="quick" id="quickRow"></div>
