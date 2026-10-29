@@ -109,11 +109,9 @@ canvas{display:block;border:2px solid var(--steel);box-shadow:0 0 40px rgba(179,
 .banner span{font-family:var(--display);font-size:clamp(20px,5.2vw,44px);color:var(--hp);text-align:center;line-height:1;
   text-shadow:0 0 20px var(--blood),4px 4px 0 var(--blood);opacity:0}
 .banner span.go{animation:slam 1.3s ease-out forwards}
-.hint{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);z-index:6;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:3px;max-width:42%;font-weight:700;font-size:10px;letter-spacing:.08em;color:var(--hp);background:rgba(10,4,4,.82);border:2px solid var(--blood);border-radius:6px;padding:4px 8px;animation:pulse .6s infinite alternate}
-.hint div{display:flex;align-items:center;gap:3px;white-space:nowrap}
-.hint span{margin-right:3px}
-.hint b{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;font-size:10px;color:#fff;border:1.5px solid rgba(255,255,255,.6)}
-.hint b.p{background:#b3261c}.hint b.k{background:#c27012}
+.hint{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);z-index:6;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:2px;max-width:46%;font-weight:700;font-size:12px;line-height:1.25;letter-spacing:.1em;text-align:center;color:var(--hp);background:rgba(10,4,4,.85);border:2px solid var(--blood);padding:5px 12px;animation:pulse .6s infinite alternate}
+.hint div{white-space:nowrap}
+.hint .or{margin-top:3px;padding-top:4px;border-top:1px solid rgba(179,23,29,.7)}
 @keyframes pulse{to{box-shadow:0 0 18px var(--blood);color:#fff}}
 @keyframes slam{0%{transform:scale(2.2);opacity:0}14%{transform:scale(1);opacity:1}75%{opacity:1}100%{transform:scale(1.05);opacity:0}}
 .menu{position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:14px;text-align:center;
@@ -952,7 +950,7 @@ function knockout(loser,winner){
   const wi=winner===p1?0:1;
   if(wins[wi]+1>=2){wins[wi]++;phase='finish';finish={w:winner,v:loser,t:0,inputs:[]};
     loser.state='dazed';loser.t=0;loser.vx=-loser.face*4;shout('FINAL\nBLOW!');sfx('ko');shakeT=16;
-    if(winner===p1){const B=a=>a.map(c=>`<b class="${c[0]}">${c[0].toUpperCase()}</b>`).join('');$('hint').innerHTML=`<div><span>FINISH</span>${B(p1.code)}</div>`+(p1.stolen?`<div><span>STEAL ${p1.copyName}</span>${B(['kick','kick','kick'])}</div>`:'');$('hint').hidden=false}return}
+    if(winner===p1){const W=a=>a.map(c=>c.toUpperCase()).join(' · ');$('hint').innerHTML=`<div>FINAL BLOW:</div><div>${W(p1.code)}</div>`+(p1.stolen?`<div class="or">OR STEAL ${p1.copyName}'S:</div><div>${W(['kick','kick','kick'])}</div>`:'');$('hint').hidden=false}return}
   loser.state='ko';loser.t=0;loser.vx=-loser.face*6;loser.vy=-6;loser.air=true;
   phase='ko';endT=0;shout('K.O.');sfx('ko');shakeT=16;
   wins[winner===p1?0:1]++;
