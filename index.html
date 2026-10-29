@@ -110,8 +110,9 @@ canvas{display:block;border:2px solid var(--steel);box-shadow:0 0 40px rgba(179,
 .hint{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);z-index:5;pointer-events:none;white-space:nowrap;font-weight:700;font-size:14px;letter-spacing:.1em;color:var(--hp);background:rgba(10,4,4,.85);border:2px solid var(--blood);padding:6px 12px;animation:pulse .6s infinite alternate}
 @keyframes pulse{to{box-shadow:0 0 18px var(--blood);color:#fff}}
 @keyframes slam{0%{transform:scale(2.2);opacity:0}14%{transform:scale(1);opacity:1}75%{opacity:1}100%{transform:scale(1.05);opacity:0}}
-.menu{position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;
+.menu{position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:14px;text-align:center;
   background:radial-gradient(ellipse at center,rgba(60,8,10,.92),rgba(8,5,5,.96));padding:16px;overflow:auto}
+.menu>:first-child{margin-top:auto}.menu>:last-child{margin-bottom:auto}
 .menu h1{font-family:var(--display);font-size:clamp(40px,12vw,80px);line-height:.9;margin:0;color:var(--hp);text-shadow:0 0 24px var(--blood),4px 4px 0 var(--blood);text-wrap:balance}
 .menu p{margin:0;max-width:40ch;font-size:14px;line-height:1.5}
 .ladder{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
@@ -179,6 +180,7 @@ canvas{display:block;border:2px solid var(--steel);box-shadow:0 0 40px rgba(179,
     <div class="hint" id="hint" hidden>FINAL BLOW: KICK · KICK · PUNCH</div>
     <div class="menu" id="menu">
       <h1 id="mTitle">ASH TOURNAMENT</h1>
+      <button class="inst-btn" id="instB" hidden>⬇ INSTALL APP</button>
       <p id="mText">Fight your way through three champions. Win two rounds to beat each one. Hold a direction and tap ▲ to flip. Land 2 or 3 kicks in a row for an automatic punch combo, or 3 punches in a row for a 7-kick combo. Hold Punch for rapid punches. Fill your blue meter to throw a fireball. Pick who fights first. If your fighter goes down, the next teammate jumps in. Below 25% health you go into Rage Mode and hit 30% harder. Block right as a hit lands to PARRY it. Fill your meter all the way and Fire unleashes a SUPER blast. Kaiser is a chameleon: he copies each opponent's style and can steal their finisher. Beat an opponent to unlock them as a playable fighter. Win the deciding round and enter the finisher code shown on screen.</p>
       <div class="ladder" id="ladder"></div>
       <div class="keys">Keyboard: ← → move · ↑ jump · ↓ block · A punch · S kick · D fireball</div>
@@ -186,7 +188,6 @@ canvas{display:block;border:2px solid var(--steel);box-shadow:0 0 40px rgba(179,
         <div class="pick" id="pickRow" role="group" aria-label="Lead fighter"></div></div>
       <div class="diff" id="diffRow" role="group" aria-label="Difficulty"><button data-d="easy">EASY</button><button data-d="normal">NORMAL</button><button data-d="hard">HARD</button></div>
       <button class="go-btn" id="go">ENTER THE ARENA</button>
-      <button class="inst-btn" id="instB" hidden>⬇ INSTALL APP</button>
       <button class="ghost" id="cont" hidden>CONTINUE</button>
       <button class="ghost" id="back" hidden>BACK TO TITLE</button>
       <div class="extras" id="extras"><div class="pickL">QUICK FIGHT</div><div class="quick" id="quickRow"></div>
@@ -1139,7 +1140,7 @@ function showMenu(t,txt,btn,fn,title){
   if(title){let best=0;try{best=+localStorage.getItem('ashT.best')||0}catch(e){}if(best>0&&best<FOES.length){$('cont').hidden=false;$('cont').textContent='CONTINUE: FIGHT '+(best+1)+' · '+FOES[best].name;$('cont').onclick=()=>{sfx('ui');foeI=best;newMatch()}}}
   phase='menu';$('mTitle').textContent=t;$('mText').textContent=txt;$('go').textContent=btn;$('go').onclick=()=>{audioOn();sfx('ui');fn()};
   $('ladder').innerHTML=FOES.map((f,i)=>`<span class="${i<foeI||(i===foeI&&wins[0]>=2)?'done':i===foeI?'cur':''}">${f.final?'<b>FINAL BOSS</b> ':f.boss?'<b>BOSS</b> ':''}${i+1}. ${f.name}<small>${f.styleName} · ${f.stageName}</small></span>`).join('');
-  $('menu').hidden=false;$('go').focus();
+  $('menu').hidden=false;$('go').focus({preventScroll:true});$('menu').scrollTop=0;
 }
 
 
