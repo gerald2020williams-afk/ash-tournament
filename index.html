@@ -140,6 +140,14 @@ canvas{display:block;border:2px solid var(--steel);box-shadow:0 0 40px rgba(179,
 .pad .p{background:#6b1a14;border-color:#c24a36}.pad .k{background:#8a4a10;border-color:#e0901c}
 .pad .b{background:#2a3a44;border-color:#6c8796}.pad .s{background:#1d4a78;border-color:var(--meter)}
 .cab{position:relative}
+html.rot,html.rot body{overflow:hidden}
+html.rot{--b:54px}
+html.rot .cab{position:fixed;top:0;left:0;width:100vh;width:100dvh;height:100vw;max-width:none;margin:0;transform-origin:0 0;transform:rotate(90deg) translateY(-100%);gap:4px;padding-block:4px;padding-left:max(10px,env(safe-area-inset-top,0px));padding-right:max(10px,env(safe-area-inset-bottom,0px))}
+html.rot .hud{gap:8px}html.rot .name{font-size:13px}html.rot .bar{height:12px}html.rot .timer{font-size:26px}html.rot .team{display:none}
+html.rot .pad{position:absolute;left:10px;right:10px;bottom:8px;z-index:5;pointer-events:none;padding:0}
+html.rot .pad .grp{pointer-events:auto}
+html.rot .pad button{opacity:.72;font-size:11px}html.rot .pad button.down{opacity:1}
+html.rot .grp{gap:5px}
 @media (orientation:landscape) and (max-height:540px){
   :root{--b:54px}
   .cab{max-width:none;gap:4px;padding-block:4px}
@@ -1493,7 +1501,14 @@ document.querySelectorAll('.pad button').forEach(b=>{
 addEventListener('blur',()=>{keys.left=keys.right=keys.block=false;autoP.on=false});
 
 // ---------- sizing (camera zooms in on narrow screens) + loop ----------
-function fit(){
+function setRot(){const coarse=matchMedia('(pointer:coarse)').matches,por=innerHeight>innerWidth,small=Math.min(innerWidth,innerHeight)<700;document.documentElement.classList.toggle('rot',coarse&&por&&small)}
+let autoLand=false;
+addEventListener('pointerdown',()=>{if(autoLand||!matchMedia('(pointer:coarse)').matches)return;autoLand=true;
+  const lock=()=>{try{screen.orientation.lock('landscape').catch(()=>{})}catch(e){}};
+  const standalone=matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches;
+  if(standalone){lock();return}
+  if(document.fullscreenEnabled&&!document.fullscreenElement&&document.documentElement.requestFullscreen){document.documentElement.requestFullscreen().then(lock).catch(()=>{})}else lock()},{capture:true});
+function fit(){setRot();
   const st=$('stage'),w=st.clientWidth,h=st.clientHeight,d=devicePixelRatio||1;
   let s=Math.min(h/H,w/MINV);viewW=Math.min(W,w/s);
   if(viewW>=W){viewW=W;s=Math.min(h/H,w/W)}

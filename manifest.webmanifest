@@ -9,7 +9,7 @@
     "fullscreen",
     "standalone"
   ],
-  "orientation": "any",
+  "orientation": "landscape",
   "background_color": "#0c0808",
   "theme_color": "#0c0808",
   "description": "Original 1-on-1 tag-team fighting game with combos, finishers and eight arenas.",
