@@ -97,8 +97,32 @@ body{background:var(--bg);color:var(--ink);font-family:var(--body);overflow:hidd
 .menu{gap:12px}
 .menu h1{font-size:clamp(30px,min(12vw,11vh),80px)!important}
 .menu #mText{font-size:15px;max-width:40ch}
-.pick{display:flex!important;flex-wrap:nowrap;overflow-x:auto;max-width:100%;padding:4px 2px 8px;scroll-snap-type:x mandatory;justify-content:flex-start!important}
-.pick button{flex:0 0 auto;scroll-snap-align:start}
+.pick{display:flex!important;flex-direction:column;align-items:center;gap:6px;max-width:100%;padding:2px 0}
+.pickMain{display:flex;gap:8px;justify-content:center;max-width:100%}
+.pickL2{font-size:10px;letter-spacing:.14em;color:var(--dim);font-weight:700}
+.pickMore{display:flex;gap:6px;overflow-x:auto;max-width:100%;padding:2px 2px 6px;scroll-snap-type:x mandatory}
+.pickMore>:first-child{margin-left:auto}.pickMore>:last-child{margin-right:auto}
+.pickMore button{flex:0 0 auto;scroll-snap-align:start}
+.pick .mini{width:auto;min-width:84px;padding:5px 8px;gap:1px}
+.pick .mini b{font-size:15px}.pick .mini small{font-size:9px}
+@media (orientation:landscape) and (max-height:540px){
+.menu{gap:7px;padding-top:8px;padding-bottom:8px}
+.menu #mText{display:none}
+.menu h1{font-size:34px!important}
+.pick small{display:none}
+.pick button{width:auto;min-width:92px;padding:6px 12px}
+.pick .mini{min-width:70px;padding:4px 8px}
+.pickL{font-size:10px}
+.go-btn#go{font-size:22px;padding:8px 34px}
+}
+html.rot .menu{gap:7px;padding-top:8px;padding-bottom:8px}
+html.rot .menu #mText{display:none}
+html.rot .menu h1{font-size:34px!important}
+html.rot .pick small{display:none}
+html.rot .pick button{width:auto;min-width:92px;padding:6px 12px}
+html.rot .pick .mini{min-width:70px;padding:4px 8px}
+html.rot .pickL{font-size:10px}
+html.rot .go-btn#go{font-size:22px;padding:8px 34px}
 .pickWrap{max-width:100%}
 .go-btn#go{font-size:28px;padding:12px 40px}
 .fold{width:100%;max-width:420px;border:1px solid var(--steel);background:rgba(0,0,0,.3)}
@@ -1567,9 +1591,10 @@ document.addEventListener('fullscreenchange',()=>setTimeout(fit,120));
 addEventListener('orientationchange',()=>setTimeout(fit,250));
 $('muteB').onclick=()=>{muted=!muted;try{localStorage.setItem('ashT.mute',muted?'1':'0')}catch(e){}syncMute();audioOn();sfx('ui')};
 function renderPick(){const blurbs=['Fire fist · Phoenix Judgment','Street speed · Mic Drop','Chameleon · copies styles and finishers'];
-  $('pickRow').innerHTML=CORE.map((c,i)=>`<button data-i="${i}"><b>${c.short}</b><small>${blurbs[i]}</small></button>`).join('')+
-    PLAYABLE.map((c,i)=>i<unlocked?`<button data-i="${3+i}"><b>${c.short}</b><small>${c.styleName}</small></button>`:`<button disabled class="locked"><b>???</b><small>Beat ${c.short} to unlock</small></button>`).join('')}
-const syncPick=()=>[...$('pickRow').children].forEach(b=>b.setAttribute('aria-pressed',b.dataset.i!==undefined&&+b.dataset.i===lead?'true':'false'));renderPick();syncPick();
+  $('pickRow').innerHTML='<div class="pickMain">'+CORE.map((c,i)=>`<button data-i="${i}"><b>${c.short}</b><small>${blurbs[i]}</small></button>`).join('')+'</div>'+
+    `<div class="pickL2">UNLOCKABLE FIGHTERS · ${unlocked} OF ${PLAYABLE.length}</div><div class="pickMore">`+
+    PLAYABLE.map((c,i)=>i<unlocked?`<button class="mini" data-i="${3+i}"><b>${c.short}</b><small>${c.styleName}</small></button>`:`<button disabled class="mini locked"><b>???</b><small>Beat ${c.short}</small></button>`).join('')+'</div>'}
+const syncPick=()=>[...$('pickRow').querySelectorAll('button')].forEach(b=>b.setAttribute('aria-pressed',b.dataset.i!==undefined&&+b.dataset.i===lead?'true':'false'));renderPick();syncPick();
 $('pickRow').onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;lead=+b.dataset.i;try{localStorage.setItem('ashT.lead',String(lead))}catch(_){}setTeam();syncPick();
   p1=fighter(TEAM[0],240,1);$('n1').textContent=TEAM[0].name;hud();audioOn();sfx('ui')};
 $('quickRow').onclick=e=>{const b=e.target.closest('button');if(!b)return;audioOn();sfx('ui');quick=true;foeI=+b.dataset.q;newMatch()};
