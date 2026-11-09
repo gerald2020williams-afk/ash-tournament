@@ -198,6 +198,16 @@ POSES = {
         legs=[[(-15, 52), (-18, 12)], [(15, 52), (18, 12)]],
         feet=[(-21, 7, 0), (21, 7, 0)],
     ),
+    "push": dict(
+        arms=[[(-30, 96), (14, 84), (58, 92)], [(30, 96), (54, 88), (66, 104)]],
+        legs=[[(-15, 52), (-40, 14)], [(15, 52), (16, 12)]],
+        feet=[(-44, 8, -20), (20, 7, 0)],
+    ),
+    "point": dict(
+        arms=[[(-30, 96), (-44, 76), (-46, 58)], [(30, 96), (60, 126), (80, 156)]],
+        legs=[[(-15, 52), (-18, 12)], [(15, 52), (18, 12)]],
+        feet=[(-21, 7, 0), (21, 7, 0)],
+    ),
     "sit": dict(
         arms=[[(-30, 96), (-48, 72), (-44, 56)], [(30, 96), (48, 72), (44, 56)]],
         legs=None,
@@ -207,10 +217,10 @@ POSES = {
 
 
 def ninja(a, x, y, s=1.0, gi=KAI_GI, band=KAI_BAND, pose="stand", flip=False,
-          bun=False, face="happy", eyes_closed=False, blank_face=False):
+          bun=False, face="happy", eyes_closed=False, blank_face=False, tilt=0):
     """A friendly little ninja.  Feet sit on (x, y); about 200*s tall."""
     P = POSES[pose]
-    with a.at(x, y, s, flip=flip):
+    with a.at(x, y, s, flip=flip, rot=tilt):
         dy = 0
         if pose == "sit":
             dy = -34
@@ -240,37 +250,48 @@ def ninja(a, x, y, s=1.0, gi=KAI_GI, band=KAI_BAND, pose="stand", flip=False,
                 a.limb(arm, 16, gi)
                 hx, hy = arm[-1]
                 a.circle(hx, hy, 9, SKIN)
-            # head
-            if bun:
-                a.circle(0, 198, 16, gi)
-                a.limb([(-10, 190), (10, 190)], 7, band)
-            # headband tails (behind head)
-            a.limb([(40, 170), (64, 184), (82, 172)], 9, band)
-            a.limb([(40, 166), (62, 160), (76, 146)], 9, band)
-            a.circle(0, 148, 48, gi)
-            a.ellipse(0, 143, 35, 25, SKIN)
-            a.limb([(-44, 174), (-20, 181), (20, 181), (44, 174)], 11, band)
-            a.circle(44, 172, 6, band)
-            if not blank_face:
-                if eyes_closed:
-                    a.arc(-13, 148, 7, 200, 140, w=2.4 * s if a.color else 3 * s)
-                    a.arc(13, 148, 7, 200, 140, w=2.4 * s if a.color else 3 * s)
-                else:
-                    for ex in (-13, 13):
-                        a.c.setFillColor(a.ink)
-                        a.c.ellipse(ex - 5.5, 140, ex + 5.5, 155, stroke=0, fill=1)
-                        a.c.setFillColor(white)
-                        a.c.circle(ex + 2, 151, 2.2, stroke=0, fill=1)
-                if a.color:
-                    a.c.setFillColor(HexColor("#f29a9a"))
-                    a.c.circle(-24, 134, 5, stroke=0, fill=1)
-                    a.c.circle(24, 134, 5, stroke=0, fill=1)
-                if face == "happy":
-                    a.arc(0, 137, 8, 200, 140)
-                elif face == "o":
-                    a.ellipse(0, 130, 4, 5, "#c0504d")
-                elif face == "brave":
-                    a.line([(-6, 129), (6, 129)])
+            ninja_head(a, gi, band, bun, face, eyes_closed, blank_face, s)
+
+
+def ninja_head(a, gi, band, bun, face, eyes_closed, blank_face, s):
+    """Head in ninja-local units (center at 0, 148)."""
+    if bun:
+        a.circle(0, 198, 16, gi)
+        a.limb([(-10, 190), (10, 190)], 7, band)
+    # headband tails (behind head)
+    a.limb([(40, 170), (64, 184), (82, 172)], 9, band)
+    a.limb([(40, 166), (62, 160), (76, 146)], 9, band)
+    a.circle(0, 148, 48, gi)
+    a.ellipse(0, 143, 35, 25, SKIN)
+    a.limb([(-44, 174), (-20, 181), (20, 181), (44, 174)], 11, band)
+    a.circle(44, 172, 6, band)
+    if not blank_face:
+        if eyes_closed:
+            a.arc(-13, 148, 7, 200, 140, w=2.4 * s if a.color else 3 * s)
+            a.arc(13, 148, 7, 200, 140, w=2.4 * s if a.color else 3 * s)
+        else:
+            for ex in (-13, 13):
+                a.c.setFillColor(a.ink)
+                a.c.ellipse(ex - 5.5, 140, ex + 5.5, 155, stroke=0, fill=1)
+                a.c.setFillColor(white)
+                a.c.circle(ex + 2, 151, 2.2, stroke=0, fill=1)
+        if a.color:
+            a.c.setFillColor(HexColor("#f29a9a"))
+            a.c.circle(-24, 134, 5, stroke=0, fill=1)
+            a.c.circle(24, 134, 5, stroke=0, fill=1)
+        if face == "happy":
+            a.arc(0, 137, 8, 200, 140)
+        elif face == "o":
+            a.ellipse(0, 130, 4, 5, "#c0504d")
+        elif face == "brave":
+            a.line([(-6, 129), (6, 129)])
+
+
+def sleepy_head(a, x, y, s=1.0, gi=KAI_GI, band=KAI_BAND, rot=0, face="happy", eyes_closed=False):
+    """Just a ninja head (for a ninja tucked into bed)."""
+    with a.at(x, y, s, rot=rot):
+        with a.at(0, -148):
+            ninja_head(a, gi, band, False, face, eyes_closed, False, s)
 
 
 def owl(a, x, y, s=1.0, flip=False, stick=True, eyes_closed=False):
@@ -622,3 +643,146 @@ def grass(a, x, y, s=1.0):
 def zzz(a, x, y, s=1.0):
     for i, (dx, dy, sz) in enumerate([(0, 0, 22), (22, 26, 28), (50, 58, 34)]):
         a.text(x + dx * s, y + dy * s, "z", sz * s, fill="#ffffff")
+
+
+# =====================================================================
+# Props for "Little Ninja and the Dark Night" and "The Ninja Team"
+# =====================================================================
+def frog(a, x, y, s=1.0, flip=False, singing=False):
+    G, B = "#7cc95a", "#d8f0b0"
+    with a.at(x, y, s, flip=flip):
+        a.ellipse(-26, 4, 16, 8, G)
+        a.ellipse(26, 4, 16, 8, G)
+        a.ellipse(0, 26, 38, 28, G)
+        a.ellipse(0, 20, 22, 16, B)
+        a.circle(-18, 52, 12, G)
+        a.circle(18, 52, 12, G)
+        a.circle(-18, 54, 7, "#ffffff")
+        a.circle(18, 54, 7, "#ffffff")
+        a.dot(-17, 54, 3.5)
+        a.dot(19, 54, 3.5)
+        if singing:
+            a.ellipse(0, 34, 9, 6, "#c0504d")
+        else:
+            a.arc(0, 40, 14, 220, 100)
+
+
+def lily_pad(a, x, y, s=1.0):
+    with a.at(x, y, s):
+        a.poly([(0, 0), (40, 6, 40, 30, 0, 30), (-40, 30, -40, 6, -6, 2), (0, 15)], "#5fae4f")
+
+
+def pond(a, x, y, rx, ry):
+    a.ellipse(x, y, rx, ry, "#79c3ea")
+    a.arc(x - rx * 0.4, y, 14, 20, 140)
+    a.arc(x + rx * 0.3, y - ry * 0.3, 14, 20, 140)
+
+
+def firefly(a, x, y, s=1.0):
+    if a.color:
+        a.c.saveState()
+        a.c.setFillColor(HexColor("#fff6a0"))
+        a.c.setFillAlpha(0.35)
+        a.c.circle(x, y, 18 * s, stroke=0, fill=1)
+        a.c.restoreState()
+    with a.at(x, y, s):
+        a.ellipse(-6, 8, 7, 5, "#ffffff")
+        a.ellipse(6, 8, 7, 5, "#ffffff")
+        a.ellipse(0, 0, 6, 10, "#ffe45c")
+        a.circle(0, 12, 4, "#3d3550")
+
+
+def peach(a, x, y, s=1.0, rot=0):
+    with a.at(x, y, s, rot=rot):
+        a.limb([(0, 96), (4, 112)], 6, "#9a6a3e")
+        with a.at(26, 110, 1, rot=20):
+            a.ellipse(0, 0, 22, 9, "#6dbb5b")
+        a.poly([(0, 96), (-40, 112, -70, 80, -66, 46), (-62, 0, -26, -4, 0, 0),
+                (26, -4, 62, 0, 66, 46), (70, 80, 40, 112, 0, 96)], "#ffab7a")
+        a.line([(0, 94), (-14, 60, -12, 24, -6, 4)])
+        if a.color:
+            a.c.setFillColor(HexColor("#ff8a6e"))
+            a.c.circle(30, 40, 18, stroke=0, fill=1)
+
+
+def peach_slice(a, x, y, s=1.0, rot=0):
+    with a.at(x, y, s, rot=rot):
+        a.poly([(0, 0), (30, 0), (30, 26, 10, 34, 0, 0)], "#ffcf9a")
+        a.limb([(30, 0), (30, 22)], 3, "#ff8a6e")
+
+
+def blanket(a, x, y, w, h):
+    sk = 40
+    a.poly([(x, y), (x + w, y), (x + w - sk, y + h), (x + sk, y + h)], "#e8423a")
+    for i in range(1, 6):
+        t = i / 6
+        a.line([(x + w * t, y), (x + sk + (w - 2 * sk) * t, y + h)], w=2)
+    for i in range(1, 3):
+        t = i / 3
+        a.line([(x + sk * t, y + h * t), (x + w - sk * t, y + h * t)], w=2)
+
+
+def basket(a, x, y, s=1.0):
+    with a.at(x, y, s):
+        a.arc(0, 40, 30, 0, 180, w=7 * s)
+        a.poly([(-42, 40), (42, 40), (34, 0), (-34, 0)], "#d6a25e")
+        a.line([(-38, 26), (38, 26)])
+        a.line([(-36, 12), (36, 12)])
+
+
+def scroll(a, x, y, s=1.0):
+    with a.at(x, y, s):
+        a.rect(-34, -24, 68, 48, "#fbf1d6")
+        a.circle(-36, 0, 6, "#c0504d")
+        a.limb([(-38, -26), (-38, 26)], 8, "#9a6a3e")
+        a.limb([(38, -26), (38, 26)], 8, "#9a6a3e")
+        for yy in (12, 0, -12):
+            a.line([(-22, yy), (22, yy)], w=1.5)
+
+
+def window(a, x, y, w, h, night=True, moon_in=True):
+    """A window frame with a view of the night sky."""
+    a.rect(x - 10, y - 10, w + 20, h + 20, "#9a6a3e")
+    a.rect(x, y, w, h, "#2c3a75" if night else "#bfe3f2")
+    if moon_in:
+        moon(a, x + w * 0.65, y + h * 0.65, min(w, h) * 0.18)
+        star(a, x + w * 0.25, y + h * 0.75, 8)
+        star(a, x + w * 0.35, y + h * 0.35, 6)
+    a.rect(x + w / 2 - 4, y, 8, h, "#9a6a3e")
+    a.rect(x, y + h / 2 - 4, w, 8, "#9a6a3e")
+    a.rect(x - 16, y - 18, w + 32, 12, "#9a6a3e")
+
+
+def bed(a, x, y, s=1.0, who=None, eyes_closed=False, face="happy", peeking=False):
+    """A bed (side view) with a ninja tucked in. who = (gi, band) or None."""
+    with a.at(x, y, s):
+        a.rrect(-150, 0, 20, 130, 6, "#9a6a3e")
+        a.rrect(130, 0, 20, 90, 6, "#9a6a3e")
+        a.rect(-140, 30, 280, 40, "#c99a5c")
+        a.ellipse(-90, 90, 50, 24, "#ffffff")
+        if who:
+            gi, band = who
+            sleepy_head(a, -88, 124, 0.85, gi, band, rot=0 if peeking else 12, face=face, eyes_closed=eyes_closed)
+        a.poly([(-128, 66), (-128, 90, -100, 94, -60, 92), (40, 100, 110, 100, 140, 90), (140, 66)], "#7ed0f5")
+        a.line([(-60, 72), (130, 72)], w=2)
+        if who:
+            a.circle(-112, 92, 9, SKIN)
+            a.circle(-64, 93, 9, SKIN)
+
+
+def lamp(a, x, y, s=1.0, on=True):
+    with a.at(x, y, s):
+        if on and a.color:
+            a.c.saveState()
+            a.c.setFillColor(HexColor("#fff3a6"))
+            a.c.setFillAlpha(0.35)
+            a.c.circle(0, 60, 70, stroke=0, fill=1)
+            a.c.restoreState()
+        a.ellipse(0, 4, 26, 6, "#9a6a3e")
+        a.rect(-4, 4, 8, 50, "#9a6a3e")
+        a.poly([(-30, 50), (30, 50), (18, 86), (-18, 86)], "#ffd84a")
+
+
+def motion_lines(a, x, y, n=3, gap=22, length=50, w=3):
+    for i in range(n):
+        a.line([(x, y + i * gap), (x + length, y + i * gap)], w=w)
